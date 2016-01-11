@@ -1,0 +1,21 @@
+# -*- mode:conf -*-
+
+server {
+  listen 80 default_server;
+  return 301 http://k-ui.jp$request_uri;
+}
+
+server {
+  listen 80;
+  server_name k-ui.jp;
+
+  root /var/lib/blog/k-ui.jp/public;
+  index index.html;
+
+  location /munin {
+    return 301 /munin/;
+  }
+  location /munin/ {
+    alias /var/cache/munin/www/;
+  }
+}

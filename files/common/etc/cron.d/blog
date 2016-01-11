@@ -1,0 +1,4 @@
+PATH=/opt/node/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
+
+# min	hour	dom	mon	dow	user	cmd
+*/5	*	*	*	*	blog	cd /var/lib/blog/k-ui.jp && make cron | notify-to-gmail "k-ui.jp blog report"

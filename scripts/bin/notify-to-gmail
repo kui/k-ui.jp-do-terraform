@@ -1,0 +1,11 @@
+#!/bin/bash
+set -ue
+
+USAGE="$(basename $0) title"
+
+if [[ $# -ne 1 ]]; then
+    echo $USAGE >&2
+    exit 1
+fi
+
+perl -pe "s/^\s*$//" | mailx -E -s "$1" "$(cat /etc/gmail-user)"

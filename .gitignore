@@ -1,0 +1,14 @@
+####################
+# credentials
+/ssh/id_rsa*
+/ssh/config
+/scripts/gmail-*
+/do_token
+/files/*/var/lib/syncthing/config/*
+####################
+
+.*
+!.gitignore
+*.tfstate
+*.tfstate.backup
+!.gitkeep
