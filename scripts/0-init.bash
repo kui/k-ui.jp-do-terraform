@@ -9,7 +9,7 @@ fallocate -l 2G /swapfile
 chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile
-echo "/swapfile none swap sw 0 0" > /etc/fstab
+echo "/swapfile none swap sw 0 0" >> /etc/fstab
 sysctl --load /etc/sysctl.d/10-swappiness.conf
 
 apt-get update -y
