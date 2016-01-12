@@ -1,8 +1,8 @@
 TF := terraform
 DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-ENV := tama
-# ENV := pochi
+# ENV := tama
+ENV := pochi
 
 PORT_FORWARD_SYNCTHING := 18384:127.0.0.1:8384
 
