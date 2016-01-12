@@ -1,15 +1,20 @@
 TF := terraform
 DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-# ENV := tama
-ENV := pochi
+# ENV ?= tama
+ENV ?= pochi
+
+SSH_DIR := ssh/$(ENV)
+ID_RSA := $(SSH_DIR)/id_rsa
+SSH_CONFIG := $(SSH_DIR)/config
 
 PORT_FORWARD_SYNCTHING := 18384:127.0.0.1:8384
 
-.PHONY: init cd show force-apply apply destroy taint plan login open-http
-
 TF_STATE := $(ENV).tfstate
 TF_OPTS := -backup=- -var=env=$(ENV) -state=$(TF_STATE)
+IP_ADDR = $(shell make show ENV=$(ENV) | perl -ne '/^\s+ipv4_address = (.*)$$/ && print $$1, "\n"')
+
+.PHONY: init cd show force-apply apply destroy taint plan login open-http
 
 plan: init
 	$(TF) plan $(TF_OPTS)
@@ -28,26 +33,25 @@ destroy: init
 taint: init
 	$(TF) taint $(TF_OPTS) digitalocean_droplet.k-ui-jp
 
-login: init ssh/config
-	ssh -F ssh/config k-ui.jp \
+login: init $(SSH_CONFIG)
+	ssh -F "$(SSH_CONFIG)" k-ui.jp \
 		-L "$(PORT_FORWARD_SYNCTHING)"
 
-open-http: IP_ADDR = $(shell make show | perl -ne '/^\s+ipv4_address = (.*)$$/ && print $$1, "\n"')
 open-http: init
 	python -m webbrowser -t "http://$(IP_ADDR)/"
 
 ##
 
-init: cd ssh/id_rsa do_token
+init: cd $(ID_RSA) do_token
 
 cd:
 	@cd "$(DIR)"
 
-ssh/id_rsa:
-	ssh-keygen -f ssh/id_rsa -t rsa -b 2048 -P ""
+$(ID_RSA):
+	ssh-keygen -f "$@" -t rsa -b 2048 -P ""
 
-ssh/config: $(TF_STATE) ssh/gen_ssh_config.sh
-	./ssh/gen_ssh_config.sh "$@" $(TF_STATE)
+$(SSH_CONFIG): $(TF_STATE) ssh/gen_ssh_config.sh
+	./ssh/gen_ssh_config.sh "$(ID_RSA)" "$(IP_ADDR)" > "$@"
 
 do_token:
 	@echo "Abort: Require DigitalOcean API token"

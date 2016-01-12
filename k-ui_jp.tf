@@ -6,8 +6,8 @@ provider "digitalocean" {
 }
 
 resource "digitalocean_ssh_key" "default" {
-  name = "Default SSH Key"
-  public_key = "${file("./ssh/id_rsa.pub")}"
+  name = "${var.env} SSH Key"
+  public_key = "${file("./ssh/${var.env}/id_rsa.pub")}"
 }
 
 resource "digitalocean_droplet" "k-ui-jp" {
@@ -22,7 +22,7 @@ resource "digitalocean_droplet" "k-ui-jp" {
   connection {
     user = "root"
     type = "ssh"
-    key_file = "./ssh/id_rsa"
+    key_file = "./ssh/${var.env}/id_rsa"
     timeout = "10m"
   }
 
