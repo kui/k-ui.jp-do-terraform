@@ -7,7 +7,6 @@ git_url='https://github.com/kui/k-ui.jp.git'
 apt-get install -y git build-essential graphviz
 
 adduser --system --home "$home" blog
-chown blog:nogroup -R "$home"
 
 sudo -u blog -H bash -l <<EOF
 set -eux
