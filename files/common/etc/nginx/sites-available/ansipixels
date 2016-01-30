@@ -1,0 +1,11 @@
+# -*- mode:conf-unix -*-
+
+server {
+  listen 80;
+  server_name ansipixels.k-ui.jp;
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_pass http://localhost:60354;
+  }
+}
