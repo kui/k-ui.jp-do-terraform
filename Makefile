@@ -1,8 +1,8 @@
 TF := terraform
 DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-# ENV ?= tama
-ENV ?= pochi
+ENV ?= tama
+# ENV ?= pochi
 
 SSH_DIR := ssh/$(ENV)
 ID_RSA := $(SSH_DIR)/id_rsa
