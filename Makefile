@@ -1,6 +1,8 @@
 TF := terraform
 DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
+ENVS := tama pochi
+
 ENV ?= tama
 # ENV ?= pochi
 
@@ -20,7 +22,10 @@ plan: init
 	$(TF) plan $(TF_OPTS)
 
 show: init
-	time $(TF) show $(TF_STATE)
+	@for e in $(ENVS); do \
+	  echo "## $$e"; \
+	  $(TF) show $$e.tfstate; \
+	done
 
 force-apply: init taint apply open-http
 
@@ -42,7 +47,13 @@ open-http: init
 
 ##
 
-init: cd $(ID_RSA) do_token
+init: check-env cd $(ID_RSA) do_token
+
+check-env:
+	@if perl -e "'$(ENVS)' =~ /(?<!\S)$(ENV)(?!\S)/ and exit(1)"; then \
+	  echo "Invalid ENV"; \
+	  exit 1; \
+	fi
 
 cd:
 	@cd "$(DIR)"
@@ -54,5 +65,5 @@ $(SSH_CONFIG): $(TF_STATE) ssh/gen_ssh_config.sh
 	./ssh/gen_ssh_config.sh "$(ID_RSA)" "$(IP_ADDR)" > "$@"
 
 do_token:
-	@echo "Abort: Require DigitalOcean API token"
+	@echo "Require DigitalOcean API token"
 	@exit 1
