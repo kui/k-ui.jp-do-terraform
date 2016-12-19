@@ -3,8 +3,8 @@ DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 ENVS := tama pochi
 
-ENV ?= tama
-# ENV ?= pochi
+# ENV ?= tama
+ENV ?= pochi
 
 SSH_DIR := ssh/$(ENV)
 ID_RSA := $(SSH_DIR)/id_rsa
@@ -22,6 +22,9 @@ plan: init
 	$(TF) plan $(TF_OPTS)
 
 show: init
+	$(TF) show $(ENV).tfstate
+
+show-all: init
 	@for e in $(ENVS); do \
 	  echo "## $$e"; \
 	  $(TF) show $$e.tfstate; \
@@ -65,5 +68,5 @@ $(SSH_CONFIG): $(TF_STATE) ssh/gen_ssh_config.sh
 	./ssh/gen_ssh_config.sh "$(ID_RSA)" "$(IP_ADDR)" > "$@"
 
 do_token:
-	@echo "Require DigitalOcean API token"
+	@echo "Abort: Require DigitalOcean API token"
 	@exit 1
