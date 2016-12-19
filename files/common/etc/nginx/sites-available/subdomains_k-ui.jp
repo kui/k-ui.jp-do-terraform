@@ -1,0 +1,11 @@
+# -*- mode:conf-unix -*-
+
+# regex test
+server {
+  listen 80;
+  server_name ~^(?<service_name>.+)\.k-ui\.jp$;
+
+  location / {
+    return 200, $service_name;
+  }
+}
