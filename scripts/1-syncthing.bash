@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-syncthing_url='https://github.com/syncthing/syncthing/releases/download/v0.14.3/syncthing-linux-amd64-v0.14.3.tar.gz'
+syncthing_url='https://github.com/syncthing/syncthing/releases/download/v0.14.15/syncthing-linux-amd64-v0.14.15.tar.gz'
 syncthing_gz="$(basename "${syncthing_url}")"
 syncthing_dir="$(sed -e 's/\.tar\.gz$//' <<< "${syncthing_gz}")"
 
