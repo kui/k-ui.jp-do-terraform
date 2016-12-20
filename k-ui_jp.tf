@@ -20,8 +20,9 @@ resource "digitalocean_droplet" "k-ui-jp" {
   ]
 
   connection {
-    user = "root"
     type = "ssh"
+    agent = false
+    user = "root"
     key_file = "./ssh/${var.env}/id_rsa"
     timeout = "10m"
   }
