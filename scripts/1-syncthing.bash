@@ -7,14 +7,17 @@ syncthing_dir="$(sed -e 's/\.tar\.gz$//' <<< "${syncthing_gz}")"
 
 apt-get install -y wget
 
-# install sycthing
-cd /tmp
-wget "${syncthing_url}"
-tar zxf "${syncthing_gz}"
-cd "${syncthing_dir}"
-install --mode=755 syncthing /usr/local/bin
-
 adduser --disabled-password --disabled-login --gecos '' --home "/var/lib/syncthing" syncthing
 cd /var/lib/syncthing
 chown -R syncthing:syncthing .
+
+# install sycthing
+sudo -usyncthing bash <<EOF
+cd /var/lib/syncthing
+wget "${syncthing_url}"
+tar zxf "${syncthing_gz}"
+cd "${syncthing_dir}"
+install --mode=755 syncthing /var/lib/syncthing
+EOF
+
 initctl start syncthing
